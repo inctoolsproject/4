@@ -441,21 +441,23 @@ def bot(op):
                 cl.sendMessage(msg)
 
 #--------------------------------------------------------
-	    elif "Tagall" == msg.text:
-		group = cl.getGroup(msg.to)
-		mem = [contact.mid for contact in group.members]
-		for mm in mem:
-		    xname = cl.getContact(mm).displayName
-		    xlen = str(len(xname)+1)
-		    msg.contentType = 0
-		    msg.text = "@"+xname+" "
-		    msg.contentMetadata = {'MENTION':'{"MENTIONEES":[{"S":"0","E":'+json.dumps(xlen)+',"M":'+json.dumps(mm)+'}]}','EMTVER':'4'}
-		    try:
-		        cl.sendMessage(msg)
-		    except Exception as e:
-			print str(e)
+            elif "Mention" in msg.text:
+                group = cl.getGroup(msg.to)
+                k = len(group.members)//100
+                for j in xrange(k+1):
+                    msg = Message(to=msg.to)
+                    txt = u''
+                    s=0
+                    d=[]
+                    for i in group.members[j*100 : (j+1)*100]:
+                        d.append({"S":str(s), "E" :str(s+8), "M":i.mid})
+                        s += 9
+                        txt += u'@Krampus\n'
+                    msg.text = txt
+                    msg.contentMetadata = {u'MENTION':json.dumps({"MENTIONEES":d})}
+                    cl.sendMessage(msg)
 
-#--------------------------CEK SIDER------------------------------
+#--------------------------CEK SIDER----------------------------
 
             elif "Setview" in msg.text:
                 subprocess.Popen("echo '' > dataSeen/"+msg.to+".txt", shell=True, stdout=subprocess.PIPE)
