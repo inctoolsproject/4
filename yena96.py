@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import time,random,sys,json,codecs,threading,glob,re,ast,os,subprocess,requests
 
 cl = LINETCR.LINE()
-cl.login(token="EnbZQ8jNGBKD58TFtrQ2.bG/Q0ltc9LyFs73U82CdeG.MjUuSHGSLMuQhg/WQiGGIJVE7zzA6rimfJs4iwY0YP0=")
+cl.login(token="Enowp62fHtRRdJsefUB2.bG/Q0ltc9LyFs73U82CdeG.LlmwhgL96FdcTgBhkyoA7vN5dLVBuOGEgxKUpPnT5LA=")
 cl.loginResult()
 print "===[Login Success]==="
 
@@ -106,6 +106,34 @@ def yt(query):
                     isi += ['youtu.be' + b]
          return isi
 
+
+def NOTIFIED_ACCEPT_GROUP_INVITATION(op):
+    #print op
+    try:
+        cl.sendText(op.param1, cl.getContact(op.param2).displayName + "welcme😊\n " + group.name + "Salam Kenal ya kakak!")
+    except Exception as e:
+        print e
+        print ("\n\nNOTIFIED_ACCEPT_GROUP_INVITATION\n\n")
+        return
+
+
+def NOTIFIED_KICKOUT_FROM_GROUP(op):
+    try:
+        cl.sendText(op.param1, cl.getContact(op.param3).displayName + " Jangan Main Kick!\n(/*´･ω･*\)")
+    except Exception as e:
+        print e
+        print ("\n\nNOTIFIED_KICKOUT_FROM_GROUP\n\n")
+        return
+
+def NOTIFIED_LEAVE_GROUP(op):
+    try:
+        cl.sendText(op.param1, cl.getContact(op.param2).displayName + " Good Bye\n(*´･ω･*)")
+        cl.sendText(msg,to,"THANKZ YA KAKAK DAH MAU JOIN ..KAPAN JOIN LAGI YA KAKAK 🏳️")
+    except Exception as e:
+        print e
+        print ("\n\nNOTIFIED_LEAVE_GROUP\n\n")
+        return
+
 def sendMessage(to, text, contentMetadata={}, contentType=0):
     mes = Message()
     mes.to, mes.from_ = to, profile.mid
@@ -187,6 +215,17 @@ def bot(op):
                             wait["blacklist"][op.param2] = True
 
 
+        if op.type == 15:
+            cl.sendText(op.param1, "THANKZ YA KAKAK DAH MAU JOIN ..KAPAN-KAPAN JOIN LAGI YA KAKAK :)")
+            print op.param3 + "has left the group"
+
+        if op.type == 17:
+            group = cl.getGroup(op.param1)
+            cb = Message()
+            cb.to = op.param1
+            cb.text = cl.getContact(op.param2).displayName + " Selamat Datang di " + group.name
+            cl.sendText(op.param1, cl.getContact(op.param2).displayName + "welcme😊\n " + group.name + "Salam Kenal ya kakak")
+            cl.sendMessage(cb)
 
 #--------------------------NOTIFIED_UPDATE_GROUP---------------------
         if op.type == 11:
